@@ -20,7 +20,7 @@ router
         practices: [],
       });
 
-      const savedUser = await newUser.save();
+      await newUser.save();
       res.status(201).json("created");
     } catch (error) {
       res.status(500).json(`Error: ${error}`);
