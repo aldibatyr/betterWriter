@@ -1,11 +1,12 @@
 const router = require("express").Router();
 let User = require("../models/user.model");
+const UserServices = require("../services/usersService");
 
 router
   .route("/")
   .get(async (req, res) => {
     try {
-      const users = await User.find();
+      const users = await UserServices.getAllUsers();
       res.status(200).json(users);
     } catch (error) {
       res.status(500).json(`Error: ${error}`);
@@ -15,12 +16,12 @@ router
     try {
       const username = req.body.username;
 
-      const newUser = new User({
+      const newUser = {
         username: username,
         practices: [],
-      });
+      };
 
-      await newUser.save();
+      await UserServices.createNewUser(newUser);
       res.status(201).json("created");
     } catch (error) {
       res.status(500).json(`Error: ${error}`);
@@ -31,7 +32,7 @@ router
   .route("/:id")
   .get(async (req, res) => {
     try {
-      const user = await User.findById(req.params.id);
+      const user = await UserServices.getSpecificUser(req.params.id);
       res.json(user);
     } catch (error) {
       res.status(500).json(`Error ${error}`);
