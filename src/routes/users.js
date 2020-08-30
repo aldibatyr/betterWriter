@@ -15,13 +15,7 @@ router
   .post(async (req, res) => {
     try {
       const username = req.body.username;
-
-      const newUser = {
-        username: username,
-        practices: [],
-      };
-
-      await UserServices.createNewUser(newUser);
+      await UserServices.createNewUser(username);
       res.status(201).json("created");
     } catch (error) {
       res.status(500).json(`Error: ${error}`);

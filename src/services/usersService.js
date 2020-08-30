@@ -9,8 +9,11 @@ const UserServices = {
     const user = User.findById(userId);
     return user;
   },
-  createNewUser(user) {
-    const newUser = new User(user);
+  createNewUser(username) {
+    const newUser = new User({
+      username: username,
+      practices: [],
+    });
     return newUser.save();
   },
 };
