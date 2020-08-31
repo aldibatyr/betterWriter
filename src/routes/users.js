@@ -1,5 +1,4 @@
 const router = require("express").Router();
-let User = require("../models/user.model");
 const UserServices = require("../services/usersService");
 
 router
@@ -14,8 +13,7 @@ router
   })
   .post(async (req, res) => {
     try {
-      const username = req.body.username;
-      await UserServices.createNewUser(username);
+      await UserServices.createNewUser(req.body.username);
       res.status(201).json("created");
     } catch (error) {
       res.status(500).json(`Error: ${error}`);
@@ -34,22 +32,28 @@ router
   })
   .patch(async (req, res) => {
     try {
-      await User.findByIdAndUpdate(req.params.id, {
-        username: req.body.username,
-        updatedAt: Date.now,
-      });
-      res.status(204);
+      await UserServices.updateUser(req.params.id, req.body.username);
+      res.status(201).json("updated");
     } catch (error) {
       res.status(500).json(`Error: ${error}`);
     }
   })
   .delete(async (req, res) => {
     try {
-      await User.findByIdAndDelete(req.params.id);
+      await UserServices.deleteUser(req.params.id);
       res.status(204).end();
     } catch (error) {
       res.status(500).json(`Error: ${error}`);
     }
   });
+
+router.route("/:id/addPractice").patch(async (req, res) => {
+  try {
+    await UserServices.addSelectedPractice(req.params.id, req.query.practiceId);
+    res.status(201).json("done");
+  } catch (error) {
+    res.status(500).json(`Error: ${error}`);
+  }
+});
 
 module.exports = router;
